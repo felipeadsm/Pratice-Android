@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">My Application</string>
+    <string name="botao1">Ir para a tela 2</string>
+    <string name="botao2">Ir para a tela 3</string>
+    <string name="botao3">Ir para a tela 4</string>
+
+    <string name="tela1">Tela 1</string>
+    <string name="tela2">Tela 2</string>
+    <string name="tela3">Tela 3</string>
+
+    <string name="contato1">Exibir Contato 1</string>
+    <string name="contato2">Exibir Contato 2</string>
+    <string name="contato3">Exibir Contato 3</string>
+
+    <string name="exibeContato1">Pressione o Botão para exibir o Contato 1</string>
+    <string name="exibeContato2">Pressione o Botão para exibir o Contato 2</string>
+    <string name="exibeContato3">Pressione o Botão para exibir o Contato 3</string>
+
+    <string name="msg_sem_permissao">A operação não pode ser completada!</string>
+
+
+</resources>
