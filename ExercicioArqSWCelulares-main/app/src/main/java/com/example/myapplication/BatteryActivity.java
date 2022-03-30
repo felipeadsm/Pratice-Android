@@ -22,6 +22,8 @@ public class BatteryActivity extends AppCompatActivity {
 
     public long timeRemaning;
 
+    private static int pluged;
+
     @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +37,10 @@ public class BatteryActivity extends AppCompatActivity {
         //TODO: Monitorar a tela em primeiro plano
         Intent intent = new Intent(this,MyIntentService.class);
         startService(intent);
+
+        receiver = new MyBatInfoReceiver();
+        IntentFilter filter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
+        registerReceiver(receiver,filter);
     }
 
     @Override
@@ -53,6 +59,14 @@ public class BatteryActivity extends AppCompatActivity {
         registerReceiver(receiver, filter);
     }
 
+    @Override
+    protected void onResume(){
+        super.onResume();
+        receiver = new MyBatInfoReceiver();
+        IntentFilter filter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
+        registerReceiver(receiver, filter);
+    }
+
     class MyBatInfoReceiver extends BroadcastReceiver{
         @SuppressLint("SetTextI18n")
         @Override
@@ -60,19 +74,12 @@ public class BatteryActivity extends AppCompatActivity {
             int level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
             int scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
             int deviceHealth = intent.getIntExtra(BatteryManager.EXTRA_HEALTH, 0);
-            int pluged = intent.getIntExtra(BatteryManager.EXTRA_PLUGGED, 0);
+            pluged = intent.getIntExtra(BatteryManager.EXTRA_PLUGGED, 0);
 
-            BatteryManager bateryM = (BatteryManager) getApplicationContext().getSystemService(Context.BATTERY_SERVICE);
+            checkBatteryChargeTime();
 
             float battery_percent = level * 100 / (float)scale;
             charge_percent.setText(battery_percent + "%");
-
-            if (pluged == 0) {
-                charge_time.setText("Dispositivo não está carregando" );
-            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P){
-                timeRemaning = bateryM.computeChargeTimeRemaining()/600000;
-                charge_time.setText("Faltam " + timeRemaning + " minutos para o carregamento completo" );
-            }
 
             if (deviceHealth == BatteryManager.BATTERY_HEALTH_COLD) {
                 battery_health.setText("Cold");
@@ -90,6 +97,17 @@ public class BatteryActivity extends AppCompatActivity {
                 battery_health.setText("Overvoltage");
             }
         }
-    };
+    }
 
+    public void checkBatteryChargeTime() {
+        BatteryManager bateryM = (BatteryManager) getApplicationContext().getSystemService(Context.BATTERY_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            timeRemaning = bateryM.computeChargeTimeRemaining()/600000;
+            if (pluged == 0) {
+                charge_time.setText("Dispositivo não está carregando" );
+            } else {
+                charge_time.setText("Faltam " + timeRemaning + " minutos para o carregamento completo" );
+            }
+        }
+    }
 }
