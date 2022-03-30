@@ -20,8 +20,12 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ListView
+        android:id="@+id/lista"
         android:layout_width="409dp"
         android:layout_height="668dp"
+        android:contextClickable="false"
+        android:textAlignment="center"
+        android:textFilterEnabled="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
