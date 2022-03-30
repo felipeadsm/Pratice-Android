@@ -20,7 +20,7 @@ public class BatteryActivity extends AppCompatActivity {
     private TextView charge_time;
     private TextView battery_health;
 
-    public long timeRemaning;
+    public long timeRemaning = 0L;
 
     private static int pluged;
 
@@ -40,7 +40,10 @@ public class BatteryActivity extends AppCompatActivity {
 
         receiver = new MyBatInfoReceiver();
         IntentFilter filter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
+        filter.addAction(Intent.ACTION_POWER_CONNECTED);
+        filter.addAction(Intent.ACTION_POWER_DISCONNECTED);
         registerReceiver(receiver,filter);
+
     }
 
     @Override
@@ -102,8 +105,8 @@ public class BatteryActivity extends AppCompatActivity {
     public void checkBatteryChargeTime() {
         BatteryManager bateryM = (BatteryManager) getApplicationContext().getSystemService(Context.BATTERY_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            timeRemaning = bateryM.computeChargeTimeRemaining()/600000;
-            if (pluged == 0) {
+            timeRemaning = bateryM.computeChargeTimeRemaining()/600000; //TODO: Valor de 600000 para conseguir vizualziar nos celulares xiaomi
+            if (pluged == 0) {                                          //TODO: Valor de 60000 para os demais aparelhos
                 charge_time.setText("Dispositivo não está carregando" );
             } else {
                 charge_time.setText("Faltam " + timeRemaning + " minutos para o carregamento completo" );

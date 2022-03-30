@@ -26,7 +26,10 @@ public class WiFiStatusActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wi_fi_status);
 
-        //TODO Setar o status do wifi nesse TextView
+        //TODO: Monitorar a tela em primeiro plano
+        Intent intent = new Intent(this,MyIntentService.class);
+        startService(intent);
+
         wifi_status = findViewById(R.id.textView20);
     }
 
