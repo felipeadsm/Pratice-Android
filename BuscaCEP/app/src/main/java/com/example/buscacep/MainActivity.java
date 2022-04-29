@@ -1,29 +1,22 @@
 package com.example.buscacep;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import java.util.concurrent.ExecutionException;
+import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static HttpWithService conexao;
-
+    public static HttpWithService service;
     EditText txtCep;
-
     TextView txtResultado;
-
     Button btnBuscarCep;
 
     @Override
@@ -31,23 +24,24 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        bindActivityInService();  //todo: Service iniciado e bind feito ao startar a activity
+        bindActivityInService(); //TODO: Service iniciado e bind feito ao startar a activity
 
         txtCep = findViewById(R.id.editTextNumber);
         txtResultado = findViewById(R.id.lblResposta);
 
         btnBuscarCep = findViewById(R.id.btnBuscaCep);
 
-        btnBuscarCep.setOnClickListener(v -> {
-                try {
-                    CEP cep = new HttpService(txtCep.getText().toString().trim()).execute().get();
-
-                    txtResultado.setText(cep.toString());
-
-                } catch (ExecutionException | InterruptedException e) {
-                    e.printStackTrace();
+        btnBuscarCep.setOnClickListener(
+                v-> {
+                    HttpWithService service = new HttpWithService();
+                    try {
+                        CEP saida = service.httpWithService(txtCep.getText().toString().trim());
+                        txtResultado.setText(saida.toString());
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
-            });
+        );
     }
 
     private void bindActivityInService(){
@@ -63,12 +57,12 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             HttpWithService.ConnectionBinder binder = (HttpWithService.ConnectionBinder) service;
-            conexao = binder.pegarInstancia();
-
+            MainActivity.service = binder.pegarInstancia();
         }
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
+            service = null;
         }
     };
 }

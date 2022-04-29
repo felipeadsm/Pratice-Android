@@ -54,15 +54,20 @@ public class CEP {
         return uf;
     }
 
-    public void setUf(String uf) { this.uf = uf; }
+    public void setUf(String uf) {
+        this.uf = uf;
+    }
 
     @Override
     public String toString() {
-        return "CEP: " + getCep()
+
+        String retorno = "CEP: " + getCep()
                 + "\nLogradouro: " + getLogradouro()
                 + "\nComplemento: " + getComplemento()
                 + "\nBairro: " + getBairro()
                 + "\nCidade:" + getLocalidade()
                 + "\nEstado: " + getUf();
+
+        return retorno;
     }
 }
